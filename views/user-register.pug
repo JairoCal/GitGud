@@ -1,0 +1,22 @@
+extends layout.pug
+
+block content
+    form(method="post" action="/users/register")
+        input(type="hidden" name="_csrf" value=csrfToken)
+        div
+            label First Name
+            input(type="text" name="firstName" required)
+        div
+            label Last Name
+            input(type="text" name="lastName" required)
+        div
+            label Password
+            input(type="password" name="password" required)
+        div
+            label Confirm Password
+            input(type="password" name="confirmPassword" required)
+        div
+            label Email
+            input(type="email" name="email" required)
+        div
+            button(type="submit") Submit
