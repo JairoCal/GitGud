@@ -1,11 +1,13 @@
 extends layout.pug
+include utils.pug
 
 block content
-    form(method="post" action="/user/login")
+    +ValidationErrorSummary(errors)
+    form(method="post" action="/users/login")
         input(type="hidden" name="_csrf" value=csrfToken)
         div
             label Email Address
-            input(type='email' name='email' required)
+            input(type='email' name='emailAddress' required)
         div
             label Password
             input(type='password' name='password' required)
