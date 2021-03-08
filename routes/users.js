@@ -88,8 +88,10 @@ router.post(
       const hashedPassword = await bcrypt.hash(password, 10);
       user.hashedPassword = hashedPassword;
       await user.save();
-      //log our user in to their session
-      res.redirect("/");
+      loginUser(req, res, user)
+			req.session.save(() => {
+				res.redirect("/");
+			});
     } else {
       const errors = validatorErrors.array().map((error) => error.msg);
       res.render("user-register", {
@@ -112,6 +114,8 @@ router.get(
     });
   })
 );
+
+
 
 const loginValidators = [
   check("emailAddress")
@@ -142,7 +146,9 @@ router.post(
 
         if (passwordMatch) {
           loginUser(req, res, user);
-          return res.redirect("/");
+          req.session.save(() => {
+						return res.redirect("/");
+					});
         }
       }
       errors.push("Login attempt failed.");
@@ -159,8 +165,9 @@ router.post(
 
 router.get("/logout", (req, res) => {
   logoutUser(req, res);
-
-  res.redirect("/");
+	req.session.save(() => {
+		res.redirect("/");
+	});
 });
 
 module.exports = router;
