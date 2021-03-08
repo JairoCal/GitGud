@@ -7,6 +7,8 @@ const loginUser = (req, res, user) => {
 };
 
 const logoutUser = (req, res) => {
+  // req.session.auth = "undefined"
+  console.log(req.session.auth)
   delete req.session.auth;
 };
 
