@@ -57,8 +57,6 @@ const userValidators = [
     }),
 ];
 
-]
-
 
 router.post('/register', csrfProtection, userValidators, asyncHandler(async (req, res, next) => {
   const { emailAddress, firstName, lastName, password } = req.body;
