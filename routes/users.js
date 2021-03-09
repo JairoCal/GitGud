@@ -88,10 +88,10 @@ router.post(
       const hashedPassword = await bcrypt.hash(password, 10);
       user.hashedPassword = hashedPassword;
       await user.save();
-      loginUser(req, res, user)
-			req.session.save(() => {
-				res.redirect("/");
-			});
+      loginUser(req, res, user);
+      req.session.save(() => {
+        res.redirect("/");
+      });
     } else {
       const errors = validatorErrors.array().map((error) => error.msg);
       res.render("user-register", {
@@ -114,8 +114,7 @@ router.get(
     });
   })
 );
-
-
+<<<<<<< HEAD
 
 const loginValidators = [
   check("emailAddress")
@@ -138,17 +137,42 @@ router.post(
     if (validationErrors.isEmpty()) {
       const user = await db.User.findOne({ where: { emailAddress } });
 
+=======
+
+const loginValidators = [
+  check("emailAddress")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide an email address."),
+  check("password")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide a password."),
+];
+
+router.post(
+  "/login",
+  csrfProtection,
+  loginValidators,
+  asyncHandler(async (req, res, next) => {
+    const { emailAddress, password } = req.body;
+    let errors = [];
+    const validationErrors = validationResult(req);
+
+    if (validationErrors.isEmpty()) {
+      const user = await db.User.findOne({ where: { emailAddress } });
+
+>>>>>>> 4ded2ae8b861f8e9e204c76c0fdcb0458513fdf3
       if (user) {
         const passwordMatch = await bcrypt.compare(
           password,
           user.hashedPassword.toString()
         );
+<<<<<<< HEAD
 
         if (passwordMatch) {
           loginUser(req, res, user);
           req.session.save(() => {
-						return res.redirect("/");
-					});
+            return res.redirect("/");
+          });
         }
       }
       errors.push("Login attempt failed.");
@@ -165,9 +189,41 @@ router.post(
 
 router.get("/logout", (req, res) => {
   logoutUser(req, res);
-	req.session.save(() => {
-		res.redirect("/");
-	});
+  req.session.save(() => {
+    res.redirect("/");
+  });
+});
+=======
+
+        if (passwordMatch) {
+          loginUser(req, res, user);
+          req.session.save(() => {
+            return res.redirect("/");
+          });
+        }
+      }
+      errors.push("Login attempt failed.");
+    } else {
+      errors = validationErrors.array().map((error) => error.msg);
+    }
+    res.render("user-login", {
+      title: "User Login",
+      errors,
+      csrfToken: req.csrfToken(),
+    });
+  })
+);
+
+router.get("/logout", (req, res) => {
+  logoutUser(req, res);
+  req.session.save(() => {
+    res.redirect("/");
+  });
 });
 
+// comment test
+>>>>>>> 4ded2ae8b861f8e9e204c76c0fdcb0458513fdf3
+
+// comment test
+// second comment test
 module.exports = router;
